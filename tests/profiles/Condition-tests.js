@@ -1,16 +1,11 @@
 var fhir = require('fhir-schema-dstu2');
-var CIM = require('../../../lib/index');
-var profile = CIM.profiles.clinical.Condition;
+var CIM = require('../../lib/index');
+var profile = CIM.profiles.Condition;
 
 var expect = require('chai').expect;
 
 describe('Condition', function () {
     var data;
-    var validator;
-
-    before(function () {
-        validator = new fhir.Validator(fhir.schema, CIM.formats);
-    });
 
     beforeEach(function () {
         data ={
@@ -156,12 +151,13 @@ describe('Condition', function () {
                         "display": "Mild"
                     }
                 ]
-            }
+            },
+            verificationStatus: "todo" //TODO: temp fix as missing from data
         }
     });
 
     it('validates resource', function () {
-        var result = validator.validate(data, profile);
+        var result = fhir.validator.validate(data, profile);
 
         if (!result.valid) {
             console.log(result);
@@ -169,70 +165,4 @@ describe('Condition', function () {
 
         expect(result.valid).to.be.true;
     });
-
-    /*
-    describe('identifier', function () {
-        it('must be present', function () {
-            delete data.identifier;
-
-            var result = validator.validate(data);
-
-            expect(result.valid).to.be.false;
-        });
-
-        it('must include NHS Number', function () {
-            data.identifier[0].system = 'urn:fhir.nhs.uk:id/NHSNumberXX';
-
-            var result = validator.validate(data);
-
-            expect(result.valid).to.be.false;
-        });
-
-        it('must have a value', function () {
-            delete data.identifier[0].value;
-
-            var result = validator.validate(data);
-
-            expect(result.valid).to.be.false;
-        });
-    });
-
-    describe('name', function () {
-        it('must be present', function () {
-            delete data.name;
-
-            var result = validator.validate(data);
-
-            expect(result.valid).to.be.false;
-        });
-
-        it('must include at least one name', function () {
-            data.name = [];
-
-            var result = validator.validate(data);
-
-            expect(result.valid).to.be.false;
-        });
-    });
-
-    describe('gender', function () {
-        it('must be present', function () {
-            delete data.gender;
-
-            var result = validator.validate(data);
-
-            expect(result.valid).to.be.false;
-        });
-    });
-
-    describe('birthDate', function () {
-        it('must be present', function () {
-            delete data.birthDate;
-
-            var result = validator.validate(data);
-
-            expect(result.valid).to.be.false;
-        });
-    });
-    */
 });

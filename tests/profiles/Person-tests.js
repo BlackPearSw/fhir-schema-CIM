@@ -1,21 +1,15 @@
 var fhir = require('fhir-schema-dstu2');
-var CIM = require('../../../lib/index');
+var CIM = require('../../lib/index');
 
 var expect = require('chai').expect;
 
-describe('Patient', function () {
+describe('Person', function () {
     var data;
-    var schema = CIM.profiles.demographics.Patient;
-    var validator;
-
-    before(function () {
-        validator = new fhir.Validator(fhir.schema, CIM.formats);
-    });
+    var schema = CIM.profiles.Person;
 
     beforeEach(function () {
-        data =
-        {
-            "resourceType": "Patient",
+        data = {
+            "resourceType": "Person",
             "id": "11af0e7f-be18-431e-9be9-fd1adb2f0742",
             "identifier": [
                 {
@@ -51,34 +45,13 @@ describe('Patient', function () {
                     ]
                 }
             ],
-            "telecom": [
-                {
-                    "system": "phone",
-                    "value": "02227820842",
-                    "use": "home"
-                }
-            ],
             "gender": "male",
-            "birthDate": "2007-08-24",
-            "address": [
-                {
-                    //"use": "?",
-                    "text": "59 Lincombe Drive, Leeds, West Yorkshire, LS8 1PS",
-                    "line": [
-                        "59 Lincombe Drive",
-                        "Leeds",
-                        "West Yorkshire"
-                    ],
-                    "city": "Leeds",
-                    "state": "West Yorkshire",
-                    "postalCode": "LS8 1PS"
-                }
-            ]
+            "birthDate": "2007-08-24"
         }
     });
 
     it('validates resource', function () {
-        var result = validator.validate(data, schema);
+        var result = fhir.validator.validate(data, schema);
 
         if (!result.valid) {
             console.log(result);
@@ -91,15 +64,7 @@ describe('Patient', function () {
         it('must be present', function () {
             delete data.identifier;
 
-            var result = validator.validate(data, schema);
-
-            expect(result.valid).to.be.false;
-        });
-
-        it('must include NHS Number', function () {
-            data.identifier[0].system = 'urn:fhir.nhs.uk:id/NHSNumberXX';
-
-            var result = validator.validate(data, schema);
+            var result = fhir.validator.validate(data, schema);
 
             expect(result.valid).to.be.false;
         });
@@ -107,7 +72,7 @@ describe('Patient', function () {
         it('must have a value', function () {
             delete data.identifier[0].value;
 
-            var result = validator.validate(data, schema);
+            var result = fhir.validator.validate(data, schema);
 
             expect(result.valid).to.be.false;
         });
@@ -117,7 +82,7 @@ describe('Patient', function () {
         it('must be present', function () {
             delete data.name;
 
-            var result = validator.validate(data, schema);
+            var result = fhir.validator.validate(data, schema);
 
             expect(result.valid).to.be.false;
         });
@@ -125,7 +90,7 @@ describe('Patient', function () {
         it('must include at least one name', function () {
             data.name = [];
 
-            var result = validator.validate(data, schema);
+            var result = fhir.validator.validate(data, schema);
 
             expect(result.valid).to.be.false;
         });
@@ -135,7 +100,7 @@ describe('Patient', function () {
         it('must be present', function () {
             delete data.gender;
 
-            var result = validator.validate(data, schema);
+            var result = fhir.validator.validate(data, schema);
 
             expect(result.valid).to.be.false;
         });
@@ -145,7 +110,7 @@ describe('Patient', function () {
         it('must be present', function () {
             delete data.birthDate;
 
-            var result = validator.validate(data, schema);
+            var result = fhir.validator.validate(data, schema);
 
             expect(result.valid).to.be.false;
         });
