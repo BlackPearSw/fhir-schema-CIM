@@ -152,7 +152,7 @@ describe('Condition', function () {
                     }
                 ]
             },
-            verificationStatus: "todo" //TODO: temp fix as missing from data
+            verificationStatus: "todo" //TODO: [CIM-63] temp fix as missing from data
         }
     });
 
